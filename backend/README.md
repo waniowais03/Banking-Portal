@@ -1,104 +1,564 @@
-# Banking Portal Rest API Using Spring Boot & Spring Security
+# 🏦 Banking Portal REST API
 
-## Fork and Star ⭐ Github Repo For New Feature Update
+A secure and structured Banking Portal REST API developed using **Spring Boot, Spring Security, JWT, MySQL, JPA/Hibernate, MapStruct, and Maven**.
 
-[![GitHub Repo](https://img.shields.io/badge/GitHub-UI%20Repo-blue.svg?style=flat-square)](https://github.com/abhi9720/BankingPortal-UI)
-[![GitHub Repo](https://img.shields.io/badge/GitHub-API%20Repo-blue.svg?style=flat-square)](https://github.com/abhi9720/BankingPortal-API)
+This backend provides REST APIs for user authentication, account management, PIN management, OTP verification, cash deposit and withdrawal, fund transfers, transaction history, dashboard information, email services, and other banking operations.
 
-## API Documentation
+---
 
-- [https://github.com/abhi9720/BankingPortal-API/wiki](https://github.com/abhi9720/BankingPortal-API/wiki)
+## 📌 Project Overview
 
-## Banking Portal UI
+The Banking Portal is designed to simulate the core functionality of a digital banking system.
 
-- [https://github.com/abhi9720/BankingPortal-UI](https://github.com/abhi9720/BankingPortal-UI)
+The backend follows a layered architecture where controllers handle HTTP requests, services contain business logic, repositories communicate with the database, and entities represent persistent data.
 
-![image](https://github.com/abhi9720/BankingPortal-API/assets/68281476/237694d9-6e8d-48e8-a7a2-982b9f8ca671)
+The application uses **Spring Security and JWT authentication** to protect secured endpoints and ensure that banking operations can only be performed by authenticated users.
 
-***
+A separate frontend application communicates with this backend through REST APIs.
 
-The Banking Portal API provides a set of endpoints for managing user accounts, fund transfers, and transactions. This project aims to facilitate secure and efficient banking operations for users.
+---
 
-## Features
+## ✨ Features
 
-- User Registration: Users can register by providing their details, such as name, email, address, and phone number.
-- PIN Management: Users can create and update their PINs for added security.
-- Cash Deposit and Withdrawal: Users can deposit and withdraw cash from their accounts.
-- Fund Transfer: Users can transfer funds to other accounts within the system.
-- Transaction History: Users can view their transaction history.
+### 👤 User Management
+- User registration
+- User login
+- User profile management
+- User validation
+- Secure password handling
+- Account creation associated with registered users
 
-## Technologies Used
+### 🔐 Authentication & Security
+- Spring Security
+- JWT-based authentication
+- Bearer token authentication
+- Protected REST endpoints
+- Authentication filters
+- Unauthorized-access handling
+- Password encryption
+- Token management
 
-![image](https://github.com/abhi9720/BankingPortal-API/assets/68281476/31896d20-16d9-4fe1-a534-0490841de4b9)
-![image](https://github.com/abhi9720/BankingPortal-API/assets/68281476/c09bc4ac-c0ca-4f7c-9c6e-8eb9818eb35b)
-![image](https://github.com/abhi9720/BankingPortal-API/assets/68281476/78c75fff-e8a8-49c6-9897-34b08b2c9308)
-![image](https://github.com/abhi9720/BankingPortal-API/assets/68281476/3647613e-1d6e-4bc4-98b6-2da5648659f9)
-![image](https://github.com/abhi9720/BankingPortal-API/assets/68281476/8a5c0b00-776b-444e-bc24-36fc6bfe4c41)
-![image](https://github.com/abhi9720/BankingPortal-API/assets/68281476/b56a7167-6a3a-49a0-8b8a-8a4e3e71a383)
-![image](https://github.com/abhi9720/BankingPortal-API/assets/68281476/b5c86e65-cbe8-400a-afeb-895846601da7)
+### 🔢 PIN Management
+- Create banking PIN
+- Update banking PIN
+- PIN validation
+- Secure PIN-related operations
 
-## TODO
+### 📩 OTP Verification
+- OTP generation
+- OTP validation
+- OTP retry-limit handling
+- OTP-based verification
+- Email-based OTP functionality
 
-- UI Fix for Dashboard Charts
-- Pagination in table
-- Save JWT Token in db and remove on logout
-- Email trigger on account login
-- Send Bank Statement on Email
+### 💰 Banking Operations
+- Cash deposit
+- Cash withdrawal
+- Balance validation
+- Minimum/maximum transaction validation
+- Fund transfer between accounts
+- Insufficient-balance handling
 
-## Installation and Setup
+### 📊 Transactions
+- Transaction creation
+- Transaction history
+- Transaction details
+- Deposit transactions
+- Withdrawal transactions
+- Fund-transfer transactions
 
-1. Clone the repository: `git clone https://github.com/yourusername/banking-portal-api.git`
-2. Navigate to the project folder: `cd banking-portal-api`
-3. Configure MySQL: Set up a MySQL database, create a copy of `application.properties.sample`, rename it `application.properties`, and update the properties as needed.
-4. Build and run the project: `mvn spring-boot:run`
+### 📈 Dashboard
+The backend provides dashboard-related information that can be consumed by the frontend to display account and transaction statistics.
 
-## Screenshots
+### 📧 Email Services
+The application includes email functionality using **Spring Boot Starter Mail** for services such as OTP and account-related communication.
 
-![project](https://github.com/abhi9720/BankingPortal-API/assets/68281476/45bca1e0-0af2-4d63-a8d0-efd7b67df6bf)
+### 🌍 Geolocation
+The project contains a geolocation service that can retrieve location-related information using an external geolocation API.
 
-## Error Handling
+### ⚡ Caching
+Caching support is implemented using Spring Cache with **Caffeine** and the project also contains Redis configuration for caching-related functionality.
 
-The API implements global exception handling for common error scenarios, such as account not found, unauthorized access, and insufficient balance.
+### 🚨 Exception Handling
+The application includes custom exceptions and centralized exception handling for cases such as:
+- Account not found
+- Invalid PIN
+- Invalid OTP
+- Invalid token
+- Unauthorized access
+- Insufficient balance
+- Invalid transaction amount
+- Fund-transfer errors
+- Password-reset errors
+- Geolocation errors
 
-## How to Contribute
+---
 
-We welcome and encourage developers to contribute to the project and help us make it even better. If you are interested in contributing, follow these steps:
+## 🛠️ Technologies Used
 
-👉🏻**Fork the Repository**: Click on the "Fork" button on the top right corner of the GitHub repository page. This will create a copy of the repository in your GitHub account.
+| Technology | Purpose |
+|------------|---------|
+| Java 17 | Programming language |
+| Spring Boot 3.3.1 | Backend framework |
+| Spring Web | REST API development |
+| Spring Security | Authentication and authorization |
+| JWT | Token-based authentication |
+| Spring Data JPA | Database interaction |
+| Hibernate | ORM |
+| MySQL | Relational database |
+| MapStruct | Object mapping |
+| Lombok | Boilerplate reduction |
+| Maven | Build and dependency management |
+| Spring Mail | Email functionality |
+| Caffeine | Local caching |
+| Redis | Cache support |
+| Swagger / OpenAPI | API documentation |
+| JUnit | Testing |
 
-👉🏻**Clone the Forked Repository**: Open your terminal or command prompt and use the following command to clone the repository to your local machine:
+---
 
-   ```sh
-   git clone https://github.com/your-username/BankingPortal-API.git
-   ```
+## 🏗️ Project Architecture
 
-   Replace `your-username` with your GitHub username.
+The backend follows a layered architecture:
 
-👉🏻**Create a New Branch**: Move into the project directory using `cd BankingPortal-API` and create a new branch for your changes:
+```text
+Client / Frontend
+       │
+       ▼
+   Controllers
+       │
+       ▼
+     Services
+       │
+       ▼
+   Repositories
+       │
+       ▼
+      MySQL
+```
 
-   ```sh
-   git checkout -b feature/your-new-feature
-   ```
+Supporting components include:
 
-   Replace `your-new-feature` with a descriptive name for your contribution.
+```text
+Security
+   │
+   ├── JWT Authentication
+   ├── Authentication Filter
+   └── Security Configuration
 
-👉🏻**Make Changes**: Now, make the desired changes to the codebase using your favorite code editor.
+DTO
+   │
+   └── Request / Response Objects
 
-👉🏻**Commit Changes**: After making the changes, save your work and commit the changes with a meaningful commit message:
+Mapper
+   │
+   └── Entity ↔ DTO Mapping
 
-   ```sh
-   git add .
-   git commit -m "Add your commit message here"
-   ```
+Exception
+   │
+   └── Global Exception Handling
 
-👉🏻**Push Changes**: Push your changes to your forked repository:
+Config
+   │
+   ├── Security
+   ├── Cache
+   ├── Redis
+   ├── CORS
+   └── Swagger
+```
 
-   ```sh
-   git push origin feature/your-new-feature
-   ```
+---
 
-👉🏻**Create a Pull Request**: Go to your forked repository on GitHub, and you'll see a "Compare & Pull Request" button. Click on it to create a new pull request.
+## 📂 Project Structure
 
-👉🏻**Wait for Review**: Your pull request will be reviewed by the project maintainers. Make any necessary changes based on their feedback.
+```text
+backend/
+│
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── com/webapp/bankingportal/
+│   │   │
+│   │   └── resources/
+│   │
+│   └── test/
+│
+├── .mvn/
+├── pom.xml
+├── mvnw
+├── mvnw.cmd
+├── Dockerfile
+├── docker/
+└── README.md
+```
 
-**👏🏻👏🏻 Congratulations! 🎉🎊** Your contribution has been accepted and merged into the main repository. You are now a contributor to the project.
+### Main Packages
+
+- `config/` — Application configurations such as security, caching, Redis, CORS and Swagger.
+- `controller/` — REST controllers responsible for handling API requests.
+- `service/` — Main business logic of the banking application.
+- `repository/` — Spring Data JPA repositories used for database operations.
+- `entity/` — JPA entities representing database tables.
+- `dto/` — Data Transfer Objects used for API requests and responses.
+- `mapper/` — MapStruct and custom mapping logic.
+- `security/` — JWT authentication and security-related components.
+- `exception/` — Custom exceptions used throughout the application.
+- `util/` — Reusable utility and validation classes.
+- `type/` — Application-specific types used for caching and other functionality.
+
+---
+
+## 🗄️ Database
+
+The application uses **MySQL** as its relational database.
+
+The backend uses:
+- Spring Data JPA
+- Hibernate
+- MySQL Connector
+- Entity-based database mapping
+
+Major entities include:
+
+```text
+User
+Account
+Transaction
+OtpInfo
+Token
+PasswordResetToken
+```
+
+---
+
+## 🔐 Authentication Flow
+
+```text
+User
+ │
+ ▼
+Login API
+ │
+ ▼
+Spring Security
+ │
+ ▼
+Credentials Validation
+ │
+ ▼
+JWT Token Generation
+ │
+ ▼
+Client
+ │
+ ▼
+Authorization: Bearer <token>
+ │
+ ▼
+JWT Authentication Filter
+ │
+ ▼
+Protected API
+```
+
+The JWT token is used to authenticate requests to secured endpoints.
+
+---
+
+## 💳 Banking Operation Flow
+
+### Cash Deposit
+
+```text
+Client
+   ↓
+Account Controller
+   ↓
+Account Service
+   ↓
+Validate Account & Amount
+   ↓
+Update Balance
+   ↓
+Create Transaction
+   ↓
+Database
+```
+
+### Cash Withdrawal
+
+```text
+Client
+   ↓
+Account Controller
+   ↓
+Account Service
+   ↓
+Validate PIN
+   ↓
+Check Balance
+   ↓
+Withdraw Amount
+   ↓
+Create Transaction
+   ↓
+Database
+```
+
+### Fund Transfer
+
+```text
+Sender
+   ↓
+Transfer API
+   ↓
+Validate Authentication
+   ↓
+Validate Sender Account
+   ↓
+Validate Receiver Account
+   ↓
+Check Balance
+   ↓
+Transfer Amount
+   ↓
+Create Transactions
+   ↓
+Database
+```
+
+---
+
+## 📩 OTP & Email
+
+The project contains an OTP service responsible for generating and validating OTPs.
+
+The email service uses Spring Mail and SMTP configuration to send email messages.
+
+OTP-related functionality includes:
+- OTP generation
+- OTP validation
+- OTP expiration/validation logic
+- Retry-limit handling
+- Email delivery
+
+---
+
+## 🌐 API Documentation
+
+The project includes OpenAPI/Swagger support for API documentation.
+
+After starting the application, the available API documentation can be accessed through the configured Swagger/OpenAPI endpoint.
+
+---
+
+## ⚙️ Installation & Setup
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/waniowais03/Banking-Portal.git
+```
+
+### 2. Navigate to Backend
+
+```bash
+cd Banking-Portal/backend
+```
+
+### 3. Configure MySQL
+
+Create a MySQL database named:
+
+```text
+bankingapp
+```
+
+Then configure the database connection in your local:
+
+```text
+src/main/resources/application.properties
+```
+
+Do not commit sensitive credentials to GitHub.
+
+Use the provided sample configuration:
+
+```text
+src/main/resources/application.properties.sample
+```
+
+as a reference.
+
+---
+
+## 📝 Application Configuration
+
+The application requires configuration for:
+
+```properties
+server.port=8180
+
+spring.datasource.url=jdbc:mysql://localhost:3306/bankingapp
+spring.datasource.username=YOUR_USERNAME
+spring.datasource.password=YOUR_PASSWORD
+```
+
+JWT configuration and email configuration should also be provided through local configuration or environment variables.
+
+**Never expose real database passwords, email passwords, API keys, or JWT secrets in a public repository.**
+
+---
+
+## 🚀 Running the Backend
+
+From the `backend` directory:
+
+```bash
+./mvnw spring-boot:run
+```
+
+If PMD causes a build issue during development:
+
+```bash
+./mvnw spring-boot:run -Dpmd.skip=true
+```
+
+The application is configured to run on:
+
+```text
+http://localhost:8180
+```
+
+---
+
+## 🧪 Running Tests
+
+```bash
+./mvnw test
+```
+
+---
+
+## 🔨 Build the Project
+
+```bash
+./mvnw clean package
+```
+
+The generated build files will be available inside:
+
+```text
+target/
+```
+
+---
+
+## 🐳 Docker
+
+The backend contains Docker-related files:
+
+```text
+Dockerfile
+docker/docker-compose.yml
+```
+
+These can be used to containerize and run the backend and its supporting services.
+
+---
+
+## 🔗 Frontend Integration
+
+This repository contains the backend REST API.
+
+A separate frontend application communicates with this backend using HTTP requests.
+
+```text
+Frontend
+   │
+   │ HTTP / REST API
+   ▼
+Spring Boot Backend
+   │
+   ├── Spring Security
+   ├── Business Logic
+   ├── JWT
+   └── JPA/Hibernate
+          │
+          ▼
+        MySQL
+```
+
+The frontend can consume authentication, account, transaction, transfer, deposit and withdrawal APIs provided by the backend.
+
+---
+
+## 🔒 Security Considerations
+
+The project uses:
+- Spring Security
+- JWT authentication
+- Password encryption
+- Bearer token authorization
+- Protected endpoints
+- Input validation
+- Custom security exceptions
+- OTP verification
+
+For deployment, sensitive values should be stored using environment variables or secure secret management instead of committing them to source control.
+
+---
+
+## 📌 Future Improvements
+
+Possible future improvements include:
+- Improved dashboard charts
+- Pagination for transaction tables
+- Better token lifecycle management
+- Email notification on account login
+- Bank statement generation
+- Email delivery of bank statements
+- Production-ready deployment configuration
+- Improved frontend/backend environment configuration
+- Additional automated tests
+
+---
+
+## 👨‍💻 Project
+
+**Banking Portal REST API**
+
+Developed as a full-stack banking application with a Spring Boot REST API backend and a separate frontend application.
+
+The project demonstrates practical implementation of:
+- REST API development
+- Spring Boot
+- Spring Security
+- JWT authentication
+- MySQL database integration
+- JPA/Hibernate
+- OTP verification
+- Email services
+- Banking transactions
+- Exception handling
+- Caching
+- API documentation
+- Unit testing
+
+---
+
+## 📄 License
+
+This project includes the license and contribution files provided with the project repository.
+
+For contribution guidelines, please refer to:
+
+```text
+CONTRIBUTING.md
+```
+
+---
+
+## ⭐ Acknowledgement
+
+This project was developed and customized as a practical banking application to understand how a modern backend system can handle authentication, account management, secure transactions, database operations and communication with a separate frontend application.

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { transferFunds } from "../services/api";
 
@@ -12,6 +12,7 @@ function Transfer() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const idempotencyRef = useRef({ fingerprint: "", key: "" });
 
   const sourceAccountNumber =
     localStorage.getItem("accountNumber");
@@ -49,14 +50,30 @@ function Transfer() {
       return;
     }
 
+    const normalizedTarget = targetAccountNumber.trim();
+    const fingerprint = JSON.stringify([
+      sourceAccountNumber,
+      normalizedTarget,
+      numericAmount,
+      pin,
+    ]);
+
+    if (idempotencyRef.current.fingerprint !== fingerprint) {
+      idempotencyRef.current = {
+        fingerprint,
+        key: crypto.randomUUID(),
+      };
+    }
+
     try {
       setLoading(true);
 
       const response = await transferFunds(
         sourceAccountNumber,
-        targetAccountNumber.trim(),
+        normalizedTarget,
         numericAmount,
-        pin
+        pin,
+        idempotencyRef.current.key
       );
 
       const responseMessage =
@@ -66,6 +83,7 @@ function Transfer() {
             "Fund transferred successfully.";
 
       setMessage(responseMessage);
+      idempotencyRef.current = { fingerprint: "", key: "" };
 
       setTargetAccountNumber("");
       setAmount("");

@@ -1,4 +1,7 @@
+
 package com.webapp.bankingportal.dto;
+
+import java.math.BigDecimal;
 
 import com.webapp.bankingportal.entity.Account;
 
@@ -12,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class AccountResponse {
 
     private String accountNumber;
-    private double balance;
+    private BigDecimal balance;
     private String accountType;
     private String branch;
     private String ifscCode;
@@ -24,5 +27,4 @@ public class AccountResponse {
         this.branch = account.getBranch();
         this.ifscCode = account.getIfscCode();
     }
-
 }

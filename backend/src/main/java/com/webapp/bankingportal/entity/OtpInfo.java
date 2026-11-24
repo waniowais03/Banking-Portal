@@ -1,3 +1,4 @@
+
 package com.webapp.bankingportal.entity;
 
 import java.time.LocalDateTime;
@@ -20,19 +21,36 @@ public class OtpInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String accountNumber;
 
-    @Column
+    @Column(nullable = false)
     private String otp;
 
-    @Column
+    @Column(nullable = false)
     private LocalDateTime generatedAt;
+
+    @Column(nullable = false)
+    private int failedAttempts = 0;
+
+    @Column(nullable = false)
+    private int generationAttempts = 0;
+
+    private LocalDateTime generationWindowStartedAt;
+
+    private LocalDateTime generationBlockedUntil;
+
+    @Column(nullable = false)
+    private boolean consumed = false;
 
     public OtpInfo(String accountNumber, String otp, LocalDateTime generatedAt) {
         this.accountNumber = accountNumber;
         this.otp = otp;
         this.generatedAt = generatedAt;
+        this.failedAttempts = 0;
+        this.generationAttempts = 0;
+        this.generationWindowStartedAt = generatedAt;
+        this.generationBlockedUntil = null;
+        this.consumed = false;
     }
-
 }

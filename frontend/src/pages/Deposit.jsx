@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { depositCash } from "../services/api";
 
@@ -11,6 +11,7 @@ function Deposit() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const idempotencyRef = useRef({ fingerprint: "", key: "" });
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -30,12 +31,22 @@ function Deposit() {
       return;
     }
 
+    const fingerprint = JSON.stringify([numericAmount, pin]);
+
+    if (idempotencyRef.current.fingerprint !== fingerprint) {
+      idempotencyRef.current = {
+        fingerprint,
+        key: crypto.randomUUID(),
+      };
+    }
+
     try {
       setLoading(true);
 
       const response = await depositCash(
         numericAmount,
-        pin
+        pin,
+        idempotencyRef.current.key
       );
 
       const responseMessage =
@@ -45,6 +56,7 @@ function Deposit() {
             "Cash deposited successfully.";
 
       setMessage(responseMessage);
+      idempotencyRef.current = { fingerprint: "", key: "" };
       setAmount("");
       setPin("");
     } catch (err) {

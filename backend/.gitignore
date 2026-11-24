@@ -58,3 +58,10 @@ target/
 docker/mysql/data/
 docker/redis/data/
 
+.env
+
+# Backup files
+*.bak
+
+# Backup files
+*.backup

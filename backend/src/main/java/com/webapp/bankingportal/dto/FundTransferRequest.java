@@ -1,4 +1,12 @@
+
 package com.webapp.bankingportal.dto;
 
-public record FundTransferRequest(String sourceAccountNumber, String targetAccountNumber, double amount, String pin) {
+import java.math.BigDecimal;
+
+public record FundTransferRequest(
+    String sourceAccountNumber,
+    String targetAccountNumber,
+    BigDecimal amount,
+    String pin
+) {
 }

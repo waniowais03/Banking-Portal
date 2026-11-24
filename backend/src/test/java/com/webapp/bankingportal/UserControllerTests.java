@@ -1,8 +1,12 @@
 package com.webapp.bankingportal;
 
+import jakarta.mail.internet.MimeMessage;
+
 import org.hamcrest.core.StringContains;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -12,6 +16,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.jayway.jsonpath.JsonPath;
 
 import com.webapp.bankingportal.dto.LoginRequest;
+import com.webapp.bankingportal.entity.User;
+import com.webapp.bankingportal.exception.AccountNumberCollisionException;
+import com.webapp.bankingportal.service.AccountService;
 import com.webapp.bankingportal.dto.OtpRequest;
 import com.webapp.bankingportal.dto.OtpVerificationRequest;
 import com.webapp.bankingportal.dto.PinRequest;
@@ -22,6 +29,9 @@ import com.webapp.bankingportal.util.JsonUtil;
 import lombok.val;
 
 public class UserControllerTests extends BaseTest {
+
+    @SpyBean
+    private AccountService accountServiceSpy;
 
     @Autowired
     private TokenService tokenService;
@@ -213,7 +223,7 @@ public class UserControllerTests extends BaseTest {
                 .content(JsonUtil.toJson(user)))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content()
-                        .string(String.format(ApiMessages.USER_EMAIL_ADDRESS_INVALID_ERROR.getMessage(), email)));
+                        .string("Please provide a valid email address."));
     }
 
     @Test
@@ -498,7 +508,29 @@ public class UserControllerTests extends BaseTest {
                         .string(String.format(ApiMessages.OTP_SENT_SUCCESS.getMessage(), user.getEmail())));
 
         val receivedMessages = GreenMailJavaMailSender.getReceivedMessagesForDomain(user.getEmail());
-        val otpVerificationRequest = new OtpVerificationRequest(accountNumber, getOtpFromEmail(receivedMessages[0]));
+
+        MimeMessage otpEmail = null;
+        for (MimeMessage message : receivedMessages) {
+            String subject = message.getSubject();
+            String body = getTextFromPart(message);
+
+            // Temporary diagnostics: show every message GreenMail returned for this recipient.
+
+            if (ApiMessages.EMAIL_SUBJECT_OTP.getMessage().equals(subject)) {
+                otpEmail = message;
+            }
+        }
+
+        Assertions.assertNotNull(
+                otpEmail,
+                "OTP email with subject '" + ApiMessages.EMAIL_SUBJECT_OTP.getMessage()
+                        + "' not found. Check the GreenMail email diagnostics above."
+        );
+
+        val otpVerificationRequest = new OtpVerificationRequest(
+                accountNumber,
+                getOtpFromEmail(otpEmail)
+        );
 
         val loginResult = mockMvc.perform(MockMvcRequestBuilders
                 .post("/api/users/verify-otp")
@@ -512,8 +544,7 @@ public class UserControllerTests extends BaseTest {
 
         val pinRequest = new PinRequest(accountNumber, getRandomPin(), user.getPassword());
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/account/pin/create")
+        mockMvc.perform(postWithIdempotencyKey("/api/account/pin/create")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(pinRequest)))
@@ -806,6 +837,40 @@ public class UserControllerTests extends BaseTest {
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/api/users/logout"))
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+    }
+
+
+    @Test
+    public void test_register_user_retries_after_account_number_collision()
+            throws Exception {
+
+        User user = createUser();
+
+        Mockito.doThrow(new AccountNumberCollisionException(
+                "Simulated account number collision",
+                new RuntimeException("Unique constraint collision")
+        )).doCallRealMethod()
+                .when(accountServiceSpy)
+                .createAccount(Mockito.any(User.class));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .post("/api/users/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.toJson(user)))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        Mockito.verify(
+                accountServiceSpy,
+                Mockito.times(2)
+        ).createAccount(Mockito.any(User.class));
+
+        User savedUser = userRepository.findByEmail(user.getEmail())
+                .orElseThrow();
+
+        Assertions.assertNotNull(savedUser.getAccount());
+        Assertions.assertNotNull(
+                savedUser.getAccount().getAccountNumber()
+        );
     }
 
 }

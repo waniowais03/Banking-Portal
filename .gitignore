@@ -1,2 +1,5 @@
 backend/src/main/resources/application.properties
 .DS_Store
+
+# Editor settings
+.vscode/

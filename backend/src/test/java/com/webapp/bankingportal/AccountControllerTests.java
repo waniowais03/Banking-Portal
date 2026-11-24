@@ -2,6 +2,7 @@ package com.webapp.bankingportal;
 
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Test;
+import java.math.BigDecimal;
 
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -60,8 +61,7 @@ public class AccountControllerTests extends BaseTest {
 
         val pinRequest = new PinRequest(userDetails.get("accountNumber"), getRandomPin(), getRandomPassword());
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/account/pin/create")
+        mockMvc.perform(postWithIdempotencyKey("/api/account/pin/create")
                 .header("Authorization", "Bearer " + userDetails.get("token"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(pinRequest)))
@@ -76,8 +76,7 @@ public class AccountControllerTests extends BaseTest {
 
         val pinRequest = new PinRequest(userDetails.get("accountNumber"), getRandomPin(), null);
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/account/pin/create")
+        mockMvc.perform(postWithIdempotencyKey("/api/account/pin/create")
                 .header("Authorization", "Bearer " + userDetails.get("token"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(pinRequest)))
@@ -92,8 +91,7 @@ public class AccountControllerTests extends BaseTest {
 
         val pinRequest = new PinRequest(userDetails.get("accountNumber"), null, userDetails.get("password"));
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/account/pin/create")
+        mockMvc.perform(postWithIdempotencyKey("/api/account/pin/create")
                 .header("Authorization", "Bearer " + userDetails.get("token"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(pinRequest)))
@@ -109,8 +107,7 @@ public class AccountControllerTests extends BaseTest {
         val pinRequest = new PinRequest(userDetails.get("accountNumber"), faker.number().digits(3),
                 userDetails.get("password"));
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/account/pin/create")
+        mockMvc.perform(postWithIdempotencyKey("/api/account/pin/create")
                 .header("Authorization", "Bearer " + userDetails.get("token"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(pinRequest)))
@@ -126,8 +123,7 @@ public class AccountControllerTests extends BaseTest {
         val pinRequest = new PinRequest(userDetails.get("accountNumber"), faker.number().digits(5),
                 userDetails.get("password"));
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/account/pin/create")
+        mockMvc.perform(postWithIdempotencyKey("/api/account/pin/create")
                 .header("Authorization", "Bearer " + userDetails.get("token"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(pinRequest)))
@@ -140,8 +136,7 @@ public class AccountControllerTests extends BaseTest {
     public void test_pin_create_unauthorized_access() throws Exception {
         val pinRequest = new PinRequest(getRandomAccountNumber(), getRandomPin(), getRandomPassword());
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/account/pin/create")
+        mockMvc.perform(postWithIdempotencyKey("/api/account/pin/create")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(pinRequest)))
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized());
@@ -154,8 +149,7 @@ public class AccountControllerTests extends BaseTest {
         val pinUpdateRequest = new PinUpdateRequest(userDetails.get("accountNumber"), userDetails.get("pin"),
                 getRandomPin(), userDetails.get("password"));
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/account/pin/update")
+        mockMvc.perform(postWithIdempotencyKey("/api/account/pin/update")
                 .header("Authorization", "Bearer " + userDetails.get("token"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(pinUpdateRequest)))
@@ -171,8 +165,7 @@ public class AccountControllerTests extends BaseTest {
         val pinUpdateRequest = new PinUpdateRequest(userDetails.get("accountNumber"), userDetails.get("pin"),
                 getRandomPin(), getRandomPassword());
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/account/pin/update")
+        mockMvc.perform(postWithIdempotencyKey("/api/account/pin/update")
                 .header("Authorization", "Bearer " + userDetails.get("token"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(pinUpdateRequest)))
@@ -188,8 +181,7 @@ public class AccountControllerTests extends BaseTest {
         val pinUpdateRequest = new PinUpdateRequest(userDetails.get("accountNumber"), getRandomPin(), getRandomPin(),
                 userDetails.get("password"));
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/account/pin/update")
+        mockMvc.perform(postWithIdempotencyKey("/api/account/pin/update")
                 .header("Authorization", "Bearer " + userDetails.get("token"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(pinUpdateRequest)))
@@ -205,8 +197,7 @@ public class AccountControllerTests extends BaseTest {
         val pinUpdateRequest = new PinUpdateRequest(userDetails.get("accountNumber"), userDetails.get("pin"),
                 faker.number().digits(3), userDetails.get("password"));
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/account/pin/update")
+        mockMvc.perform(postWithIdempotencyKey("/api/account/pin/update")
                 .header("Authorization", "Bearer " + userDetails.get("token"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(pinUpdateRequest)))
@@ -222,8 +213,7 @@ public class AccountControllerTests extends BaseTest {
         val pinUpdateRequest = new PinUpdateRequest(userDetails.get("accountNumber"), userDetails.get("pin"),
                 faker.number().digits(5), userDetails.get("password"));
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/account/pin/update")
+        mockMvc.perform(postWithIdempotencyKey("/api/account/pin/update")
                 .header("Authorization", "Bearer " + userDetails.get("token"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(pinUpdateRequest)))
@@ -239,8 +229,7 @@ public class AccountControllerTests extends BaseTest {
         val pinUpdateRequest = new PinUpdateRequest(userDetails.get("accountNumber"), userDetails.get("pin"),
                 getRandomPin(), null);
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/account/pin/update")
+        mockMvc.perform(postWithIdempotencyKey("/api/account/pin/update")
                 .header("Authorization", "Bearer " + userDetails.get("token"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(pinUpdateRequest)))
@@ -256,8 +245,7 @@ public class AccountControllerTests extends BaseTest {
         val pinUpdateRequest = new PinUpdateRequest(userDetails.get("accountNumber"), null, getRandomPin(),
                 userDetails.get("password"));
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/account/pin/update")
+        mockMvc.perform(postWithIdempotencyKey("/api/account/pin/update")
                 .header("Authorization", "Bearer " + userDetails.get("token"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(pinUpdateRequest)))
@@ -273,8 +261,7 @@ public class AccountControllerTests extends BaseTest {
         val pinUpdateRequest = new PinUpdateRequest(userDetails.get("accountNumber"), userDetails.get("pin"), null,
                 userDetails.get("password"));
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/account/pin/update")
+        mockMvc.perform(postWithIdempotencyKey("/api/account/pin/update")
                 .header("Authorization", "Bearer " + userDetails.get("token"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(pinUpdateRequest)))
@@ -288,8 +275,7 @@ public class AccountControllerTests extends BaseTest {
         val pinUpdateRequest = new PinUpdateRequest(getRandomAccountNumber(), getRandomPin(), getRandomPin(),
                 getRandomPassword());
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/account/pin/update")
+        mockMvc.perform(postWithIdempotencyKey("/api/account/pin/update")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(pinUpdateRequest)))
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized());
@@ -297,17 +283,16 @@ public class AccountControllerTests extends BaseTest {
 
     @Test
     public void test_deposit_with_valid_data() throws Exception {
-        createAndLoginUserWithInitialBalance(100.0);
+        createAndLoginUserWithInitialBalance(BigDecimal.valueOf(100));
     }
 
     @Test
     public void test_deposit_with_invalid_pin() throws Exception {
         val userDetails = createAndLoginUserWithPin();
 
-        val amountRequest = new AmountRequest(userDetails.get("accountNumber"), getRandomPin(), 100.0);
+        val amountRequest = new AmountRequest(userDetails.get("accountNumber"), getRandomPin(), BigDecimal.valueOf(100));
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/account/deposit")
+        mockMvc.perform(postWithIdempotencyKey("/api/account/deposit")
                 .header("Authorization", "Bearer " + userDetails.get("token"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(amountRequest)))
@@ -320,10 +305,9 @@ public class AccountControllerTests extends BaseTest {
     public void test_deposit_with_negative_amount() throws Exception {
         val userDetails = createAndLoginUserWithPin();
 
-        val amountRequest = new AmountRequest(userDetails.get("accountNumber"), userDetails.get("pin"), -100.0);
+        val amountRequest = new AmountRequest(userDetails.get("accountNumber"), userDetails.get("pin"), BigDecimal.valueOf(-100));
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/account/deposit")
+        mockMvc.perform(postWithIdempotencyKey("/api/account/deposit")
                 .header("Authorization", "Bearer " + userDetails.get("token"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(amountRequest)))
@@ -336,10 +320,9 @@ public class AccountControllerTests extends BaseTest {
     public void test_deposit_with_excessively_large_amount() throws Exception {
         val userDetails = createAndLoginUserWithPin();
         val amountRequest = new AmountRequest(userDetails.get("accountNumber"),
-                userDetails.get("pin"), 1000000.0);
+                userDetails.get("pin"), BigDecimal.valueOf(1000000));
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/account/deposit")
+        mockMvc.perform(postWithIdempotencyKey("/api/account/deposit")
                 .header("Authorization", "Bearer " + userDetails.get("token"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(amountRequest)))
@@ -352,10 +335,9 @@ public class AccountControllerTests extends BaseTest {
     public void test_deposit_with_missing_pin() throws Exception {
         val userDetails = createAndLoginUserWithPin();
 
-        val amountRequest = new AmountRequest(userDetails.get("accountNumber"), null, 100.0);
+        val amountRequest = new AmountRequest(userDetails.get("accountNumber"), null, BigDecimal.valueOf(100));
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/account/deposit")
+        mockMvc.perform(postWithIdempotencyKey("/api/account/deposit")
                 .header("Authorization", "Bearer " + userDetails.get("token"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(amountRequest)))
@@ -366,10 +348,9 @@ public class AccountControllerTests extends BaseTest {
 
     @Test
     public void test_deposit_with_unauthorized_access() throws Exception {
-        val amountRequest = new AmountRequest(getRandomAccountNumber(), getRandomPin(), 100.0);
+        val amountRequest = new AmountRequest(getRandomAccountNumber(), getRandomPin(), BigDecimal.valueOf(100));
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/account/deposit")
+        mockMvc.perform(postWithIdempotencyKey("/api/account/deposit")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(amountRequest)))
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized());
@@ -377,13 +358,12 @@ public class AccountControllerTests extends BaseTest {
 
     @Test
     public void test_withdraw_with_valid_pin_and_amount() throws Exception {
-        val amount = 100.0;
+        val amount = BigDecimal.valueOf(100);
         val userDetails = createAndLoginUserWithInitialBalance(amount);
 
         val amountRequest = new AmountRequest(userDetails.get("accountNumber"), userDetails.get("pin"), amount);
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/account/withdraw")
+        mockMvc.perform(postWithIdempotencyKey("/api/account/withdraw")
                 .header("Authorization", "Bearer " + userDetails.get("token"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(amountRequest)))
@@ -396,10 +376,9 @@ public class AccountControllerTests extends BaseTest {
     public void test_withdraw_with_invalid_pin() throws Exception {
         val userDetails = createAndLoginUserWithPin();
 
-        val amountRequest = new AmountRequest(userDetails.get("accountNumber"), getRandomPin(), 100.0);
+        val amountRequest = new AmountRequest(userDetails.get("accountNumber"), getRandomPin(), BigDecimal.valueOf(100));
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/account/withdraw")
+        mockMvc.perform(postWithIdempotencyKey("/api/account/withdraw")
                 .header("Authorization", "Bearer " + userDetails.get("token"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(amountRequest)))
@@ -412,10 +391,9 @@ public class AccountControllerTests extends BaseTest {
     public void test_withdraw_with_negative_amount() throws Exception {
         val userDetails = createAndLoginUserWithPin();
 
-        val amountRequest = new AmountRequest(userDetails.get("accountNumber"), userDetails.get("pin"), -100.0);
+        val amountRequest = new AmountRequest(userDetails.get("accountNumber"), userDetails.get("pin"), BigDecimal.valueOf(-100));
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/account/withdraw")
+        mockMvc.perform(postWithIdempotencyKey("/api/account/withdraw")
                 .header("Authorization", "Bearer " + userDetails.get("token"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(amountRequest)))
@@ -428,10 +406,9 @@ public class AccountControllerTests extends BaseTest {
     public void test_withdraw_with_zero_amount() throws Exception {
         val userDetails = createAndLoginUserWithPin();
 
-        val amountRequest = new AmountRequest(userDetails.get("accountNumber"), userDetails.get("pin"), 0.0);
+        val amountRequest = new AmountRequest(userDetails.get("accountNumber"), userDetails.get("pin"), BigDecimal.ZERO);
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/account/withdraw")
+        mockMvc.perform(postWithIdempotencyKey("/api/account/withdraw")
                 .header("Authorization", "Bearer " + userDetails.get("token"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(amountRequest)))
@@ -442,13 +419,12 @@ public class AccountControllerTests extends BaseTest {
 
     @Test
     public void test_withdraw_with_insufficient_funds() throws Exception {
-        val amount = 100.0;
+        val amount = BigDecimal.valueOf(100);
         val userDetails = createAndLoginUserWithInitialBalance(amount);
 
-        val amountRequest = new AmountRequest(userDetails.get("accountNumber"), userDetails.get("pin"), amount * 2);
+        val amountRequest = new AmountRequest(userDetails.get("accountNumber"), userDetails.get("pin"), amount.multiply(BigDecimal.valueOf(2)));
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/account/withdraw")
+        mockMvc.perform(postWithIdempotencyKey("/api/account/withdraw")
                 .header("Authorization", "Bearer " + userDetails.get("token"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(amountRequest)))
@@ -461,10 +437,9 @@ public class AccountControllerTests extends BaseTest {
     public void test_withdraw_with_missing_pin() throws Exception {
         val userDetails = createAndLoginUserWithPin();
 
-        val amountRequest = new AmountRequest(userDetails.get("accountNumber"), null, 100.0);
+        val amountRequest = new AmountRequest(userDetails.get("accountNumber"), null, BigDecimal.valueOf(100));
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/account/withdraw")
+        mockMvc.perform(postWithIdempotencyKey("/api/account/withdraw")
                 .header("Authorization", "Bearer " + userDetails.get("token"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(amountRequest)))
@@ -475,10 +450,9 @@ public class AccountControllerTests extends BaseTest {
 
     @Test
     public void test_withdraw_with_unauthorized_access() throws Exception {
-        val amountRequest = new AmountRequest(getRandomAccountNumber(), getRandomPin(), 100.0);
+        val amountRequest = new AmountRequest(getRandomAccountNumber(), getRandomPin(), BigDecimal.valueOf(100));
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/account/withdraw")
+        mockMvc.perform(postWithIdempotencyKey("/api/account/withdraw")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(amountRequest)))
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized());
@@ -486,14 +460,13 @@ public class AccountControllerTests extends BaseTest {
 
     @Test
     public void test_fund_transfer_with_valid_data() throws Exception {
-        val amount = 100.0;
+        val amount = BigDecimal.valueOf(100);
         val userDetails = createAndLoginUserWithInitialBalance(amount);
 
         val fundTransferRequest = new FundTransferRequest(userDetails.get("accountNumber"),
                 createAndLoginUser().get("accountNumber"), amount, userDetails.get("pin"));
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/account/fund-transfer")
+        mockMvc.perform(postWithIdempotencyKey("/api/account/fund-transfer")
                 .header("Authorization", "Bearer " + userDetails.get("token"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(fundTransferRequest)))
@@ -504,14 +477,13 @@ public class AccountControllerTests extends BaseTest {
 
     @Test
     public void test_fund_transfer_to_the_same_account() throws Exception {
-        val amount = 100.0;
+        val amount = BigDecimal.valueOf(100);
         val userDetails = createAndLoginUserWithInitialBalance(amount);
 
         val fundTransferRequest = new FundTransferRequest(userDetails.get("accountNumber"),
                 userDetails.get("accountNumber"), amount, userDetails.get("pin"));
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/account/fund-transfer")
+        mockMvc.perform(postWithIdempotencyKey("/api/account/fund-transfer")
                 .header("Authorization", "Bearer " + userDetails.get("token"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(fundTransferRequest)))
@@ -522,14 +494,13 @@ public class AccountControllerTests extends BaseTest {
 
     @Test
     public void test_fund_transfer_with_invalid_source_account_pin() throws Exception {
-        val amount = 100.0;
+        val amount = BigDecimal.valueOf(100);
         val userDetails = createAndLoginUserWithInitialBalance(amount);
 
         val fundTransferRequest = new FundTransferRequest(userDetails.get("accountNumber"),
                 createAndLoginUser().get("accountNumber"), amount, getRandomPin());
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/account/fund-transfer")
+        mockMvc.perform(postWithIdempotencyKey("/api/account/fund-transfer")
                 .header("Authorization", "Bearer " + userDetails.get("token"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(fundTransferRequest)))
@@ -540,14 +511,13 @@ public class AccountControllerTests extends BaseTest {
 
     @Test
     public void test_fund_transfer_with_invalid_target_account() throws Exception {
-        val amount = 100.0;
+        val amount = BigDecimal.valueOf(100);
         val userDetails = createAndLoginUserWithInitialBalance(amount);
 
         val fundTransferRequest = new FundTransferRequest(userDetails.get("accountNumber"), getRandomAccountNumber(),
                 amount, userDetails.get("pin"));
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/account/fund-transfer")
+        mockMvc.perform(postWithIdempotencyKey("/api/account/fund-transfer")
                 .header("Authorization", "Bearer " + userDetails.get("token"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(fundTransferRequest)))
@@ -558,14 +528,13 @@ public class AccountControllerTests extends BaseTest {
 
     @Test
     public void test_fund_transfer_with_insufficient_funds() throws Exception {
-        val amount = 100.0;
+        val amount = BigDecimal.valueOf(100);
         val userDetails = createAndLoginUserWithInitialBalance(amount);
 
         val fundTransferRequest = new FundTransferRequest(userDetails.get("accountNumber"),
-                createAndLoginUser().get("accountNumber"), amount * 2, userDetails.get("pin"));
+                createAndLoginUser().get("accountNumber"), amount.multiply(BigDecimal.valueOf(2)), userDetails.get("pin"));
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/account/fund-transfer")
+        mockMvc.perform(postWithIdempotencyKey("/api/account/fund-transfer")
                 .header("Authorization", "Bearer " + userDetails.get("token"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(fundTransferRequest)))
@@ -576,14 +545,13 @@ public class AccountControllerTests extends BaseTest {
 
     @Test
     public void test_fund_transfer_with_negative_amount() throws Exception {
-        val amount = 100.0;
+        val amount = BigDecimal.valueOf(100);
         val userDetails = createAndLoginUserWithInitialBalance(amount);
 
         val fundTransferRequest = new FundTransferRequest(userDetails.get("accountNumber"),
-                createAndLoginUser().get("accountNumber"), -amount, userDetails.get("pin"));
+                createAndLoginUser().get("accountNumber"), amount.negate(), userDetails.get("pin"));
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/account/fund-transfer")
+        mockMvc.perform(postWithIdempotencyKey("/api/account/fund-transfer")
                 .header("Authorization", "Bearer " + userDetails.get("token"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(fundTransferRequest)))
@@ -594,14 +562,13 @@ public class AccountControllerTests extends BaseTest {
 
     @Test
     public void test_fund_transfer_with_zero_amount() throws Exception {
-        val amount = 100.0;
+        val amount = BigDecimal.valueOf(100);
         val userDetails = createAndLoginUserWithInitialBalance(amount);
 
         val fundTransferRequest = new FundTransferRequest(userDetails.get("accountNumber"),
-                createAndLoginUser().get("accountNumber"), 0.0, userDetails.get("pin"));
+                createAndLoginUser().get("accountNumber"), BigDecimal.ZERO, userDetails.get("pin"));
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/account/fund-transfer")
+        mockMvc.perform(postWithIdempotencyKey("/api/account/fund-transfer")
                 .header("Authorization", "Bearer " + userDetails.get("token"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(fundTransferRequest)))
@@ -612,14 +579,13 @@ public class AccountControllerTests extends BaseTest {
 
     @Test
     public void test_fund_transfer_with_missing_source_account_pin() throws Exception {
-        val amount = 100.0;
+        val amount = BigDecimal.valueOf(100);
         val userDetails = createAndLoginUserWithInitialBalance(amount);
 
         val fundTransferRequest = new FundTransferRequest(userDetails.get("accountNumber"),
                 createAndLoginUser().get("accountNumber"), amount, null);
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/account/fund-transfer")
+        mockMvc.perform(postWithIdempotencyKey("/api/account/fund-transfer")
                 .header("Authorization", "Bearer " + userDetails.get("token"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(fundTransferRequest)))
@@ -630,14 +596,13 @@ public class AccountControllerTests extends BaseTest {
 
     @Test
     public void test_fund_transfer_with_missing_target_account() throws Exception {
-        val amount = 100.0;
+        val amount = BigDecimal.valueOf(100);
         val userDetails = createAndLoginUserWithInitialBalance(amount);
 
         val fundTransferRequest = new FundTransferRequest(userDetails.get("accountNumber"), null,
                 amount, userDetails.get("pin"));
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/account/fund-transfer")
+        mockMvc.perform(postWithIdempotencyKey("/api/account/fund-transfer")
                 .header("Authorization", "Bearer " + userDetails.get("token"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(fundTransferRequest)))
@@ -648,14 +613,13 @@ public class AccountControllerTests extends BaseTest {
 
     @Test
     public void test_fund_transfer_unauthorized_access() throws Exception {
-        val amount = 100.0;
+        val amount = BigDecimal.valueOf(100);
         val userDetails = createAndLoginUserWithInitialBalance(amount);
 
         val fundTransferRequest = new FundTransferRequest(userDetails.get("accountNumber"),
                 createAndLoginUser().get("accountNumber"), amount, userDetails.get("pin"));
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/account/fund-transfer")
+        mockMvc.perform(postWithIdempotencyKey("/api/account/fund-transfer")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(fundTransferRequest)))
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized());
@@ -663,7 +627,7 @@ public class AccountControllerTests extends BaseTest {
 
     @Test
     public void test_transactions_with_authorized_access() throws Exception {
-        val amount = 100.0;
+        val amount = BigDecimal.valueOf(100);
         val userDetails = createAndLoginUserWithInitialBalance(amount);
 
         mockMvc.perform(MockMvcRequestBuilders

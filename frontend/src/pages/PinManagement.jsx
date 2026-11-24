@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { createPin, updatePin } from "../services/api";
 
@@ -15,6 +15,10 @@ function PinManagement() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const idempotencyRef = useRef({
+    create: { fingerprint: "", key: "" },
+    update: { fingerprint: "", key: "" },
+  });
 
   const accountNumber = localStorage.getItem("accountNumber");
 
@@ -37,6 +41,15 @@ function PinManagement() {
       return;
     }
 
+    const fingerprint = JSON.stringify([accountNumber, pin, password]);
+
+    if (idempotencyRef.current.create.fingerprint !== fingerprint) {
+      idempotencyRef.current.create = {
+        fingerprint,
+        key: crypto.randomUUID(),
+      };
+    }
+
     try {
       setLoading(true);
 
@@ -44,6 +57,7 @@ function PinManagement() {
         accountNumber,
         pin,
         password,
+        idempotencyKey: idempotencyRef.current.create.key,
       });
 
       const responseMessage =
@@ -52,6 +66,7 @@ function PinManagement() {
           : response.data?.message || "PIN created successfully.";
 
       setMessage(responseMessage);
+      idempotencyRef.current.create = { fingerprint: "", key: "" };
       setPin("");
       setPassword("");
     } catch (err) {
@@ -91,6 +106,20 @@ function PinManagement() {
       return;
     }
 
+    const fingerprint = JSON.stringify([
+      accountNumber,
+      oldPin,
+      newPin,
+      password,
+    ]);
+
+    if (idempotencyRef.current.update.fingerprint !== fingerprint) {
+      idempotencyRef.current.update = {
+        fingerprint,
+        key: crypto.randomUUID(),
+      };
+    }
+
     try {
       setLoading(true);
 
@@ -99,6 +128,7 @@ function PinManagement() {
         oldPin,
         newPin,
         password,
+        idempotencyKey: idempotencyRef.current.update.key,
       });
 
       const responseMessage =
@@ -107,6 +137,7 @@ function PinManagement() {
           : response.data?.message || "PIN updated successfully.";
 
       setMessage(responseMessage);
+      idempotencyRef.current.update = { fingerprint: "", key: "" };
 
       setOldPin("");
       setNewPin("");

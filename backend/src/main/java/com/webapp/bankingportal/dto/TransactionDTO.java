@@ -1,5 +1,7 @@
+
 package com.webapp.bankingportal.dto;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import com.webapp.bankingportal.entity.Transaction;
@@ -16,7 +18,7 @@ import lombok.val;
 public class TransactionDTO {
 
     private Long id;
-    private double amount;
+    private BigDecimal amount;
     private TransactionType transactionType;
     private Date transactionDate;
     private String sourceAccountNumber;
@@ -27,15 +29,17 @@ public class TransactionDTO {
         this.amount = transaction.getAmount();
         this.transactionType = transaction.getTransactionType();
         this.transactionDate = transaction.getTransactionDate();
-        this.sourceAccountNumber = transaction.getSourceAccount().getAccountNumber();
+
+        this.sourceAccountNumber =
+            transaction.getSourceAccount().getAccountNumber();
 
         val targetAccount = transaction.getTargetAccount();
         var targetAccountNumber = "N/A";
+
         if (targetAccount != null) {
             targetAccountNumber = targetAccount.getAccountNumber();
         }
 
         this.targetAccountNumber = targetAccountNumber;
     }
-
 }

@@ -106,6 +106,16 @@ export const sendBankStatement = () =>
   api.get("/api/account/send-statement");
 
 // =========================
+// IDEMPOTENCY CONFIG
+// =========================
+
+const idempotencyConfig = (key) => ({
+  headers: {
+    "Idempotency-Key": key,
+  },
+});
+
+// =========================
 // PIN APIs
 // =========================
 
@@ -113,54 +123,57 @@ export const createPin = ({
   accountNumber,
   pin,
   password,
+  idempotencyKey,
 }) =>
-  api.post("/api/account/pin/create", {
-    accountNumber,
-    pin,
-    password,
-  });
+  api.post(
+    "/api/account/pin/create",
+    { accountNumber, pin, password },
+    idempotencyConfig(idempotencyKey)
+  );
 
 export const updatePin = ({
   accountNumber,
   oldPin,
   newPin,
   password,
+  idempotencyKey,
 }) =>
-  api.post("/api/account/pin/update", {
-    accountNumber,
-    oldPin,
-    newPin,
-    password,
-  });
+  api.post(
+    "/api/account/pin/update",
+    { accountNumber, oldPin, newPin, password },
+    idempotencyConfig(idempotencyKey)
+  );
 
 // =========================
 // BANKING APIs
 // =========================
 
-export const depositCash = (amount, pin) =>
-  api.post("/api/account/deposit", {
-    amount,
-    pin,
-  });
+export const depositCash = (amount, pin, idempotencyKey) =>
+  api.post(
+    "/api/account/deposit",
+    { amount, pin },
+    idempotencyConfig(idempotencyKey)
+  );
 
-export const withdrawCash = (amount, pin) =>
-  api.post("/api/account/withdraw", {
-    amount,
-    pin,
-  });
+export const withdrawCash = (amount, pin, idempotencyKey) =>
+  api.post(
+    "/api/account/withdraw",
+    { amount, pin },
+    idempotencyConfig(idempotencyKey)
+  );
 
 export const transferFunds = (
   sourceAccountNumber,
   targetAccountNumber,
   amount,
-  pin
+  pin,
+  idempotencyKey
 ) =>
-  api.post("/api/account/fund-transfer", {
-    sourceAccountNumber,
-    targetAccountNumber,
-    amount,
-    pin,
-  });
+  api.post(
+    "/api/account/fund-transfer",
+    { sourceAccountNumber, targetAccountNumber, amount, pin },
+    idempotencyConfig(idempotencyKey)
+  );
 
 // =========================
 // EXPORT AXIOS INSTANCE

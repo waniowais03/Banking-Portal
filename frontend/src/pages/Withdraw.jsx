@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { withdrawCash } from "../services/api";
 
@@ -11,6 +11,7 @@ function Withdraw() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const idempotencyRef = useRef({ fingerprint: "", key: "" });
 
   const accountNumber = localStorage.getItem("accountNumber");
 
@@ -37,12 +38,22 @@ function Withdraw() {
       return;
     }
 
+    const fingerprint = JSON.stringify([numericAmount, pin]);
+
+    if (idempotencyRef.current.fingerprint !== fingerprint) {
+      idempotencyRef.current = {
+        fingerprint,
+        key: crypto.randomUUID(),
+      };
+    }
+
     try {
       setLoading(true);
 
       const response = await withdrawCash(
         numericAmount,
-        pin
+        pin,
+        idempotencyRef.current.key
       );
 
       const responseMessage =
@@ -52,6 +63,7 @@ function Withdraw() {
             "Cash withdrawn successfully.";
 
       setMessage(responseMessage);
+      idempotencyRef.current = { fingerprint: "", key: "" };
       setAmount("");
       setPin("");
     } catch (err) {

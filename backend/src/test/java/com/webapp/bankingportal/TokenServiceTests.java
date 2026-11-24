@@ -121,7 +121,7 @@ public class TokenServiceTests extends BaseTest {
     public void test_get_username_from_token_with_invalid_signature() {
         val token = Jwts.builder().setSubject(getRandomAccountNumber())
                 .setIssuedAt(new Date())
-                .signWith(SignatureAlgorithm.HS256, "invalid")
+                .signWith(SignatureAlgorithm.HS256, "MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=")
                 .compact();
 
         Assertions.assertThrows(InvalidTokenException.class,

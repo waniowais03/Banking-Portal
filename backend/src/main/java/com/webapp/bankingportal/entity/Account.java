@@ -1,5 +1,7 @@
+
 package com.webapp.bankingportal.entity;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +16,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+
 import lombok.Data;
 
 @Entity
@@ -25,24 +28,32 @@ public class Account {
     private Long id;
 
     @NotEmpty
-    @Column(unique = true)
+    @Column(nullable = false, unique = true, length = 12)
     private String accountNumber;
 
     @NotEmpty
+    @Column(nullable = false)
     private String accountType = "Savings";
 
-    private String accountStatus;
-    private double balance;
+    @Column(nullable = false)
+    private String accountStatus = "ACTIVE";
+
+    @NotNull
+    @Column(nullable = false, precision = 19, scale = 2)
+    private BigDecimal balance = BigDecimal.ZERO;
+
     private String branch = "NIT";
+
     private String ifscCode = "NIT001";
-    private String Pin;
+
+    @Column(name = "pin")
+    private String pin;
 
     @NotNull
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
     private List<Token> tokens = new ArrayList<>();
-
 }
